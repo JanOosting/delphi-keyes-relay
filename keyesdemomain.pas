@@ -3,17 +3,15 @@ unit keyesdemomain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UsbRelay, Vcl.ExtCtrls,
-  Vcl.ComCtrls, Vcl.StdCtrls;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.StdCtrls, UsbRelay;
 
 type
   TfrmMain = class(TForm)
     btnFindDevices: TButton;
-    tcUsbRelayDevices: TTabControl;
     btnOpenDevice: TButton;
     btnCloseDevice: TButton;
-    pnlDeviceOpen: TPanel;
     cbRelay1: TCheckBox;
     cbRelay2: TCheckBox;
     cbRelay3: TCheckBox;
@@ -22,18 +20,19 @@ type
     cbRelay6: TCheckBox;
     cbRelay7: TCheckBox;
     cbRelay8: TCheckBox;
+    pnlDeviceOpen: TPanel;
+    tcUsbRelayDevices: TTabControl;
     procedure btnFindDevicesClick(Sender: TObject);
-    procedure tcUsbRelayDevicesChange(Sender: TObject);
     procedure btnOpenDeviceClick(Sender: TObject);
     procedure btnCloseDeviceClick(Sender: TObject);
     procedure cbRelayClick(Sender: TObject);
+    procedure tcUsbRelayDevicesChange(Sender: TObject);
   private
     FDeviceState: boolean;
     CurrentRelay : TUsbRelay;
     procedure SetDeviceState(const Value: boolean);
     procedure ShowRelays;
     procedure SetCheckbox(cb:TCheckBox);
-    { Private declarations }
     property DeviceState:boolean read FDeviceState write SetDeviceState;
   public
     { Public declarations }
@@ -77,7 +76,6 @@ end;
 procedure TfrmMain.cbRelayClick(Sender: TObject);
 begin
   CurrentRelay.state[TCheckbox(Sender).Tag]:=TCheckbox(Sender).Checked;
-  //ShowRelays;
 end;
 
 procedure TfrmMain.SetCheckbox(cb: TCheckBox);
@@ -119,7 +117,6 @@ procedure TfrmMain.tcUsbRelayDevicesChange(Sender: TObject);
 begin
   CurrentRelay:=TUsbRelay(UsbRelays.Objects[tcUsbRelayDevices.TabIndex]);
   DeviceState:=CurrentRelay.open;
-  ShowRelays;
 end;
 
 end.

@@ -18,16 +18,13 @@ Usage
 -----
 
 1. Create a new Delphi Project
-2. Copy the usb_relay_device.pas file into the source dir of your project.
-3. Copy the usb_relay_device.dll file to the output directory of your project.
+2. Copy the `usb_relay_device.pas` and `UsbRelay.pas` files into the source dir of your project or add the directory to your project options.
+3. Copy the `usb_relay_device.dll` file to the output directory of your project.
+4. Put UsbRelay in the `Uses` section
+5. `FindUsbRelays` retrieves a list of relays and stores the in a Stringlist `UsbRelays` that has the serials in the `Strings` and `TUsbRelay` in the accompanying `Objects`.
+6. After setting 'TUsbRelay.open' to `true` individual relays on the device can be controlled with the property `TUsbRelay.state[index]`. Note that `index` here is 1-based.
+7. The 'TUsbRelay.devicetype` is actually the number of relays on the device.
+8. All relays on a device can be set or unset by 'TUsbRelay.openallchannels` and `TUsbRelay.closeallchannels`.
 
-1. call usb_relay_init() to init the lib.
-2. call usb_relay_device_enumerate() to get all the device pluged into pc
-3. call usb_relay_device_open() open the device you need
-4. other operation funcation:
-call sb_relay_device_open_one_relay_channel() to open one way relay
-call usb_relay_device_open_all_relay_channel() to open all relays
-call usb_relay_device_close_one_relay_channel()to close one way relay
-call usb_relay_device_close_all_relay_channel()to close all relays
 
 See the demo application 

@@ -14,11 +14,11 @@ type
     Fdevicepath: string;
     status:cardinal;
     function Getstate(index: integer): boolean;
+    procedure refresh;
     procedure Setopen(const Value: boolean);
     procedure Setstate(index: integer; const Value: boolean);
   public
     constructor create(aSerial:string;aDevicetype:integer;aDevicepath:string);
-    procedure refresh;
     procedure openallchannels;
     procedure closeallchannels;
     property serial:string read FSerial;
@@ -34,9 +34,51 @@ var
 
 procedure FindUsbRelays;
 
+function GetUsbRelayType(id:string):integer;
+function SetUsbRelayPort(id:string;port:integer;state:boolean):integer;
+
 implementation
 var
   UsbRelayOpened:boolean;
+
+function GetUsbRelayType(id:string):integer;
+var
+  i:integer;
+  UsbRelay:TUsbRelay;
+begin
+  if Not UsbRelayOpened then
+    FindUsbRelays;
+  i:=UsbRelays.IndexOf(id);
+  if i>=0 then
+  begin
+    UsbRelay:=TUsbRelay(UsbRelays.Objects[i]);
+    result:=UsbRelay.devicetype;
+  end
+  else begin
+    result:=0;
+  end;
+end;
+
+function SetUsbRelayPort(id:string;port:integer;state:boolean):integer;
+var
+  i:integer;
+  UsbRelay:TUsbRelay;
+begin
+  if Not UsbRelayOpened then
+    FindUsbRelays;
+  i:=UsbRelays.IndexOf(id);
+  if i>=0 then
+  begin
+    UsbRelay:=TUsbRelay(UsbRelays.Objects[i]);
+    UsbRelay.open:=true;
+    UsbRelay.state[port]:=state;
+    UsbRelay.open:=false;
+    result:=0;
+  end
+  else begin
+    result:=-1;
+  end;
+end;
 
 procedure ClearRelayDevices;
 var
@@ -80,10 +122,13 @@ begin
     ListDevices;
   end
   else begin
-    if usb_relay_init=0 then
+    if usb_relay_deviceDLLLoaded then
     begin
-      UsbRelayOpened:=true;
-      ListDevices;
+      if usb_relay_init=0 then
+      begin
+        UsbRelayOpened:=true;
+        ListDevices;
+      end;
     end;
   end;
 end;
